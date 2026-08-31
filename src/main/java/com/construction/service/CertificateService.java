@@ -39,8 +39,8 @@ public class CertificateService {
         document.add(title);
         
         // Separator
-        document.add(new LineSeparator());
-        document.add(new Paragraph("\n"));
+       import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
+        document.add(new LineSeparator(new SolidLine()));
         
         // Certificate content
         Paragraph certNumber = new Paragraph()
