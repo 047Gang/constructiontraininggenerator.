@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Training Generator</title>
+    <!-- Подключаем библиотеку jsPDF для генерации PDF прямо в браузере -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin: 0; padding: 40px 20px; }
+        .card { max-width: 500px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h1 { font-size: 20px; margin-bottom: 20px; color: #111; text-align: center; }
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 14px; color: #444; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; margin-top: 25px; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; }
+        button:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔧 Генерация сертификата</h1>
+        <form id="certForm">
+            <label for="employeeName">ФИО сотрудника *</label>
+            <input type="text" id="employeeName" required placeholder="Иванов Иван Иванович">
+
+            <label for="toolSelect">Выберите инструмент *</label>
+            <select id="toolSelect" required>
+                <option value="УШМ (Болгарка)">УШМ (Болгарка)</option>
+                <option value="Дисковая пила">Дисковая пила</option>
+                <option value="Перфоратор">Перфоратор</option>
+                <option value="Гвоздезабивной пистолет">Гвоздезабивной пистолет</option>
+                <option value="Цепная пила">Цепная пила</option>
+            </select>
+
+            <label for="instructorName">ФИО инструктора</label>
+            <input type="text" id="instructorName" placeholder="Петров П.П.">
+
+            <button type="submit">Скачать сертификат (PDF)</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('certForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const name = document.getElementById('employeeName').value;
+            const tool = document.getElementById('toolSelect').value;
+            const instructor = document.getElementById('instructorName').value || '________________';
+            const date = new Date().toLocaleDateString('ru-RU');
+            const certNum = 'CERT-' + Math.floor(100000 + Math.random() * 900000);
+
+            doc.setFontSize(20);
+            doc.text("СЕРТИФИКАТ ИНСТРУКТАЖА", 105, 30, null, null, "center");
+            
+            doc.setFontSize(10);
+            doc.text("№ " + certNum, 105, 40, null, null, "center");
+
+            doc.setFontSize(12);
+            doc.text("Настоящий документ подтверждает, что:", 20, 60);
+            
+            doc.setFontSize(16);
+            doc.text(name, 105, 75, null, null, "center");
+
+            doc.setFontSize(12);
+            doc.text("прошел(а) инструктаж по работе с инструментом:", 20, 95);
+            doc.text(tool, 20, 105);
+
+            doc.text("Дата: " + date, 20, 130);
+            doc.text("Инструктор: " + instructor, 20, 140);
+
+            doc.save("certificate.pdf");
+        });
+    </script>
+</body>
+</html>
