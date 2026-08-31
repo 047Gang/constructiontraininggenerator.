@@ -1,11 +1,6 @@
 version: '3.8'
-
 services:
   app:
     build: .
     ports:
       - "8080:8080"
-    environment:
-      - JAVA_OPTS=-Xmx512m -Xms256m
-    restart: unless-stopped
-    container_name: construction-training-generator
