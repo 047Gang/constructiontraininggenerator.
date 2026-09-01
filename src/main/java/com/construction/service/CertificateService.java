@@ -1,7 +1,7 @@
 package com.construction.service;
 
 import com.construction.model.Tool;
-import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -9,9 +9,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -27,7 +29,10 @@ public class CertificateService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            PdfFont font = PdfFontFactory.createFont("Helvetica", "Cp1251", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
+            // Читаем TTF-шрифт из resources и задаем кодировку IDENTITY_H для UTF-8
+            InputStream fontStream = new ClassPathResource("fonts/Roboto-Regular.ttf").getInputStream();
+            byte[] fontBytes = fontStream.readAllBytes();
+            PdfFont font = PdfFontFactory.createFont(fontBytes, PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
 
             String certId = "CERT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
