@@ -31,14 +31,15 @@ public class TrainingController {
     public ResponseEntity<byte[]> generateCertificate(
             @RequestParam("employeeName") String employeeName,
             @RequestParam("toolId") String toolId,
-            @RequestParam(value = "instructorName", required = false) String instructorName) {
+            @RequestParam(value = "instructorName", required = false) String instructorName,
+            @RequestParam(value = "lang", defaultValue = "no") String lang) {
 
         Tool tool = toolService.getToolById(toolId);
         if (tool == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        byte[] pdfBytes = certificateService.generateCertificatePdf(employeeName, tool, instructorName);
+        byte[] pdfBytes = certificateService.generateCertificatePdf(employeeName, tool, instructorName, lang);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=certificate.pdf")
